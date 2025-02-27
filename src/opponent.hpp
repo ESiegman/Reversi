@@ -18,9 +18,10 @@
  */
 class Opponent {
 public:
-    std::pair<int, std::pair<int, int>> minimax(Game& gameInstance, uint64_t white, uint64_t black, char player, int depth, bool isMaximizing);
+    std::pair<int, std::pair<int, int>> minimax(Game& gameInstance, uint64_t white, uint64_t black, char player, int depth, bool isMaximizing, int alpha, int beta);
     std::vector<std::pair<int, int>> getPossibleMoves(Game& gameInstance, uint64_t white, uint64_t black, char player);
     char opponent(char player);
+    int evaluateBoard(Game& gameInstance, uint64_t white, uint64_t black, char player);
 };
 
 #endif

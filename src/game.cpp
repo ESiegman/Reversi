@@ -6,10 +6,12 @@
 #include "game.hpp"
 #include "board.hpp"
 #include "opponent.hpp"
+#include "consts.hpp"
 #include <iostream>
 #include <string>
 #include <vector>
 #include <cstdlib>
+#include <limits>
 
 
 /**
@@ -29,12 +31,18 @@ void Game::run() {
         std::cout << "Player vs Player" << std::endl;
         while (hasValidMoves(white, black, 'W') || hasValidMoves(white, black, 'B')) {
             if (first) {
+                if (!hasValidMoves(white, black, 'W')) {
+                    break;
+                }
                 playerTurn(white, black, 'W');
                 if (!hasValidMoves(white, black, 'B')) {
                     break;
                 }
                 playerTurn(white, black, 'B');
             } else {
+                if (!hasValidMoves(white, black, 'B')) {
+                    break;
+                }
                 playerTurn(white, black, 'B');
                 if (!hasValidMoves(white, black, 'W')) {
                     break;
@@ -45,8 +53,10 @@ void Game::run() {
     } else {
         std::cout << "Player vs AI" << std::endl;
         Opponent opponent;
+        int alpha = std::numeric_limits<int>::min();
+        int beta = std::numeric_limits<int>::max();
         if (!first) {
-            std::pair<int, int> bestMove = opponent.minimax(*this, white, black, 'B', 5, true).second;
+            std::pair<int, int> bestMove = opponent.minimax(*this, white, black, 'B', MAX_DEPTH, true, alpha, beta).second;
             applyMove(white, black, bestMove, 'B');
         }
         while (hasValidMoves(white, black, 'W') || hasValidMoves(white, black, 'B')) {
@@ -54,7 +64,7 @@ void Game::run() {
             if (!hasValidMoves(white, black, 'B')) {
                 break;
             }
-            std::pair<int, int> bestMove = opponent.minimax(*this, white, black, 'B', 5, true).second;
+            std::pair<int, int> bestMove = opponent.minimax(*this, white, black, 'B', MAX_DEPTH, true, alpha, beta).second;
             applyMove(white, black, bestMove, 'B');
         }
     }
@@ -133,33 +143,27 @@ std::pair<int,int> Game::readMove(char player) {
  * @return True if there are valid moves available, false otherwise.
  */
 bool Game::checkValidMove(uint64_t white, uint64_t black, std::pair<int, int> boardPosition, char player) {
-    int directions[8][2] = {
-        {-1, -1}, {-1, 0}, {-1, 1},
-        { 0, -1},          { 0, 1},
-        { 1, -1}, { 1, 0}, { 1, 1}
-    };
-
     uint64_t playerBoard = (player == 'W') ? white : black;
     uint64_t opponentBoard = (player == 'W') ? black : white;
 
     int row = boardPosition.first;
     int column = boardPosition.second;
-    int index = row * 8 + column;
+    int index = row * BOARD_LENGTH + column;
     uint64_t mask = 1ULL << index;
 
     if ((playerBoard & mask) || (opponentBoard & mask)) {
         return false; // The position is already occupied
     }
 
-    for (auto& direction : directions) {
+    for (auto& direction : DIRECTIONS) {
         int dRow = direction[0];
         int dCol = direction[1];
         int r = row + dRow;
         int c = column + dCol;
         bool hasOpponentBetween = false;
 
-        while (r >= 0 && r < 8 && c >= 0 && c < 8) {
-            int currentIndex = r * 8 + c;
+        while (r >= 0 && r < BOARD_LENGTH && c >= 0 && c < BOARD_LENGTH) {
+            int currentIndex = r * BOARD_LENGTH + c;
             uint64_t currentMask = 1ULL << currentIndex;
 
             if (opponentBoard & currentMask) {
@@ -191,24 +195,18 @@ bool Game::checkValidMove(uint64_t white, uint64_t black, std::pair<int, int> bo
  * @param player The character representing the current player ('W' for White, 'B' for Black).
  */
 void Game::applyMove(uint64_t &white, uint64_t &black, std::pair<int, int> boardPosition, char player) {
-    int directions[8][2] = {
-        {-1, -1}, {-1, 0}, {-1, 1},
-        { 0, -1},          { 0, 1},
-        { 1, -1}, { 1, 0}, { 1, 1}
-    };
-
     uint64_t playerBoard = (player == 'W') ? white : black;
     uint64_t opponentBoard = (player == 'W') ? black : white;
 
     int row = boardPosition.first;
     int column = boardPosition.second;
-    int index = row * 8 + column;
+    int index = row * BOARD_LENGTH + column;
     uint64_t mask = 1ULL << index;
 
     // Place the player's piece on the board
     playerBoard |= mask;
 
-    for (auto& direction : directions) {
+    for (auto& direction : DIRECTIONS) {
         int dRow = direction[0];
         int dCol = direction[1];
         int r = row + dRow;
@@ -216,8 +214,8 @@ void Game::applyMove(uint64_t &white, uint64_t &black, std::pair<int, int> board
         bool hasOpponentBetween = false;
         std::vector<int> toFlip;
 
-        while (r >= 0 && r < 8 && c >= 0 && c < 8) {
-            int currentIndex = r * 8 + c;
+        while (r >= 0 && r < BOARD_LENGTH && c >= 0 && c < BOARD_LENGTH) {
+            int currentIndex = r * BOARD_LENGTH + c;
             uint64_t currentMask = 1ULL << currentIndex;
 
             if (opponentBoard & currentMask) {
@@ -262,8 +260,8 @@ void Game::applyMove(uint64_t &white, uint64_t &black, std::pair<int, int> board
  * @return True if there are valid moves available, false otherwise.
  */
 bool Game::hasValidMoves(uint64_t white, uint64_t black, char player) {
-    for (int row = 0; row < 8; ++row) {
-        for (int col = 0; col < 8; ++col) {
+    for (int row = 0; row < BOARD_LENGTH; ++row) {
+        for (int col = 0; col < BOARD_LENGTH; ++col) {
             std::pair<int, int> boardPosition = {row, col};
             if (checkValidMove(white, black, boardPosition, player)) {
                 return true;

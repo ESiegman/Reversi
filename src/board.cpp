@@ -4,6 +4,7 @@
  */
 
 #include "board.hpp"
+#include "consts.hpp"
 #include <string>
 #include <utility>
 #include <stdexcept>
@@ -46,11 +47,11 @@ std::pair<int, int> stringToBoardPosition(const std::string& position) {
  * @throws std::out_of_range If the row or column is out of bounds.
  */
 void changeBitOnBoard(uint64_t* board, int row, int column, bool value) {
-    if (row < 0 || row >= 8 || column < 0 || column >= 8) {
+    if (row < 0 || row >= BOARD_LENGTH || column < 0 || column >= BOARD_LENGTH) {
         throw std::out_of_range("Position out of range");
     }
 
-    int index = row * 8 + column;
+    int index = row * BOARD_LENGTH + column;
     uint64_t mask = 1ULL << index;
 
     if (value) {
@@ -83,12 +84,12 @@ void printBoard(uint64_t white, uint64_t black) {
     // Print column labels
     std::cout << "  a b c d e f g h" << std::endl;
 
-    for (int row = 0; row < 8; row++) {
+    for (int row = 0; row < BOARD_LENGTH; row++) {
         // Print row label
         std::cout << row + 1 << " ";
 
-        for (int column = 0; column < 8; column++) {
-            int index = row * 8 + column;
+        for (int column = 0; column < BOARD_LENGTH; column++) {
+            int index = row * BOARD_LENGTH + column;
             uint64_t mask = 1ULL << index;
 
             if (white & mask) {
