@@ -11,6 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(SOURCES
     src/board.cpp
     src/game.cpp
+    src/opponent.cpp
     src/main.cpp
 )
 
@@ -18,6 +19,8 @@ set(SOURCES
 set(HEADERS
     src/board.hpp
     src/game.hpp
+    src/consts.hpp
+    src/opponent.hpp
 )
 
 # Create executable
