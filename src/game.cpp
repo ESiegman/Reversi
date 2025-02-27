@@ -16,6 +16,17 @@ void Game::run() {
     while (hasValidMoves(white, black, 'W') || hasValidMoves(white, black, 'B')) {
         playerTurn(white, black, 'B');
     }
+
+    std::pair<int, int> score = getScore(white, black);
+    std::cout << "Game over" << std::endl;
+    std::cout << "White: " << score.first << " Black: " << score.second << std::endl;
+    if (score.first > score.second) {
+        std::cout << "White wins" << std::endl;
+    } else if (score.first < score.second) {
+        std::cout << "Black wins" << std::endl;
+    } else {
+        std::cout << "It's a tie" << std::endl;
+    }
 }
 
 bool Game::firstPlayer() {
@@ -173,3 +184,10 @@ bool Game::hasValidMoves(uint64_t white, uint64_t black, char player) {
     }
     return false;
 }
+
+std::pair<int, int> Game::getScore(uint64_t white, uint64_t black) {
+    int whiteCount = __builtin_popcountll(white);
+    int blackCount = __builtin_popcountll(black);
+    return {whiteCount, blackCount};
+}
+

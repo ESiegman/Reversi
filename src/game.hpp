@@ -17,6 +17,7 @@ public:
     bool checkValidMove(uint64_t white, uint64_t black, std::pair<int, int> boardPosition, char player);
     void applyMove(uint64_t &white, uint64_t &black, std::pair<int, int> boardPosition, char player);
     bool hasValidMoves(uint64_t white, uint64_t black, char player);
+    std::pair<int, int> getScore(uint64_t white, uint64_t black);
 };
 
 
