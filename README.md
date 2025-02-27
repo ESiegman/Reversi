@@ -43,7 +43,7 @@ When the game starts, you will be prompted to enter coordinates such as `a4` or 
 
 ### General Rules of Reversi
 - The game begins with two black discs and two white discs placed in the center of the board in a diagonal pattern.
-- Black always moves first.
+- The first player is determined at random.
 - Players take turns placing discs on the board with their assigned color facing up.
 - A valid move must outflank one or more of the opponent's discs in a straight line (horizontally, vertically, or diagonally).
 - Outflanked discs are flipped to the current player's color.
