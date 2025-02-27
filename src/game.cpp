@@ -5,6 +5,7 @@
 
 #include "game.hpp"
 #include "board.hpp"
+#include "opponent.hpp"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -17,14 +18,46 @@
 void Game::run() {
     setupInitialPos(&white, &black);
     
-    if (firstPlayer()) {
-        playerTurn(white, black, 'W');
-    } 
+    bool first = firstPlayer();
 
-    while (hasValidMoves(white, black, 'W') || hasValidMoves(white, black, 'B')) {
-        playerTurn(white, black, 'B');
+    std::string mode;
+    std::cout << "Enter '1' for Player vs Player, '2' for Player vs AI: ";
+    std::cin >> mode;
+    bool choice = mode == "1";
+     
+    if (choice) {
+        std::cout << "Player vs Player" << std::endl;
+        while (hasValidMoves(white, black, 'W') || hasValidMoves(white, black, 'B')) {
+            if (first) {
+                playerTurn(white, black, 'W');
+                if (!hasValidMoves(white, black, 'B')) {
+                    break;
+                }
+                playerTurn(white, black, 'B');
+            } else {
+                playerTurn(white, black, 'B');
+                if (!hasValidMoves(white, black, 'W')) {
+                    break;
+                }
+                playerTurn(white, black, 'W');
+            }
+        }
+    } else {
+        std::cout << "Player vs AI" << std::endl;
+        Opponent opponent;
+        if (!first) {
+            std::pair<int, int> bestMove = opponent.minimax(*this, white, black, 'B', 5, true).second;
+            applyMove(white, black, bestMove, 'B');
+        }
+        while (hasValidMoves(white, black, 'W') || hasValidMoves(white, black, 'B')) {
+            playerTurn(white, black, 'W');
+            if (!hasValidMoves(white, black, 'B')) {
+                break;
+            }
+            std::pair<int, int> bestMove = opponent.minimax(*this, white, black, 'B', 5, true).second;
+            applyMove(white, black, bestMove, 'B');
+        }
     }
-
     std::pair<int, int> score = getScore(white, black);
     std::cout << "Game over" << std::endl;
     std::cout << "White: " << score.first << " Black: " << score.second << std::endl;
