@@ -3,6 +3,9 @@
 ## Overview
 Reversi is a strategy board game for two players, played on an 8×8 uncheckered board. The game pieces have a light and a dark face, each side representing one player. The objective of the game is to have the majority of discs turned to display your color when the last playable empty square is filled.
 
+## Features
+- The game allows you to choose between two human players or playing against an AI opponent that uses a Minimax algorithm for strategic gameplay.
+
 ## Build Instructions
 To build and run the Reversi game, follow these steps:
 
