@@ -1,9 +1,19 @@
+/**
+ * @file game.hpp
+ * @brief Header file for the game functions
+ */
+
 #ifndef GAME_HPP
 #define GAME_HPP
 
 #include <cstdint>
 #include <utility>
 
+/**
+ * @class Game
+ * @brief Manages the state and logic of a Reversi game, including player turns, move validation, and scoring.
+ *
+ */
 class Game {
 private:
     uint64_t white = 0;

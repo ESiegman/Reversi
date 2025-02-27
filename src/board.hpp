@@ -1,3 +1,8 @@
+/**
+ * @file board.hpp
+ * @brief Header file for the board functions
+ */
+
 #ifndef BOARD_HPP
 #define BOARD_HPP
 

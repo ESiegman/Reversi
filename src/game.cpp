@@ -1,11 +1,19 @@
+/**
+ * @file game.cpp
+ * @brief Implementation of the game functions
+ */
+
 #include "game.hpp"
 #include "board.hpp"
-
 #include <iostream>
 #include <string>
 #include <vector>
 #include <cstdlib>
 
+
+/**
+ * @brief Executes the main game loop, handling setup, player turns, and determining the winner.
+ */
 void Game::run() {
     setupInitialPos(&white, &black);
     
@@ -29,11 +37,25 @@ void Game::run() {
     }
 }
 
+
+/**
+ * @brief Determines which player starts the game.
+ *
+ * @return True if White starts, false if Black starts.
+ */
 bool Game::firstPlayer() {
     srand(time(0));
     return rand() % 2 == 0;
 }
 
+
+/**
+ * @brief Executes a player's turn, processing valid moves and board updates.
+ *
+ * @param white The 64-bit integer representing the white pieces.
+ * @param black The 64-bit integer representing the black pieces.
+ * @param player The character representing the current player ('W' for White, 'B' for Black).
+ */
 void Game::playerTurn(uint64_t &white, uint64_t &black, char player) {
     printBoard(white, black);
 
@@ -48,6 +70,12 @@ void Game::playerTurn(uint64_t &white, uint64_t &black, char player) {
     applyMove(white, black, boardPosition, player);
 }
 
+
+/**
+ * @brief Reads a move input from the player.
+ *
+ * @return A string representing the move in board notation (e.g., "d3").
+ */
 std::pair<int,int> Game::readMove(char player) {
     std::string position;
     std::cin >> position;
@@ -62,6 +90,15 @@ std::pair<int,int> Game::readMove(char player) {
     return boardPosition;
 }
 
+
+/**
+ * @brief Checks if the current player has valid moves available.
+ *
+ * @param white The 64-bit integer representing the white pieces.
+ * @param black The 64-bit integer representing the black pieces.
+ * @param player The character representing the current player ('W' for White, 'B' for Black).
+ * @return True if there are valid moves available, false otherwise.
+ */
 bool Game::checkValidMove(uint64_t white, uint64_t black, std::pair<int, int> boardPosition, char player) {
     int directions[8][2] = {
         {-1, -1}, {-1, 0}, {-1, 1},
@@ -111,6 +148,15 @@ bool Game::checkValidMove(uint64_t white, uint64_t black, std::pair<int, int> bo
     return false; // No valid move found
 }
 
+
+/**
+ * @brief Applies a move to the board and flips opponent pieces accordingly.
+ *
+ * @param white Reference to the 64-bit integer representing the white pieces.
+ * @param black Reference to the 64-bit integer representing the black pieces.
+ * @param boardPosition The move position as a row-column pair.
+ * @param player The character representing the current player ('W' for White, 'B' for Black).
+ */
 void Game::applyMove(uint64_t &white, uint64_t &black, std::pair<int, int> boardPosition, char player) {
     int directions[8][2] = {
         {-1, -1}, {-1, 0}, {-1, 1},
@@ -173,6 +219,15 @@ void Game::applyMove(uint64_t &white, uint64_t &black, std::pair<int, int> board
     }
 }
 
+
+/**
+ * @brief Checks if the current player has valid moves available.
+ *
+ * @param white The 64-bit integer representing the white pieces.
+ * @param black The 64-bit integer representing the black pieces.
+ * @param player The character representing the current player ('W' for White, 'B' for Black).
+ * @return True if there are valid moves available, false otherwise.
+ */
 bool Game::hasValidMoves(uint64_t white, uint64_t black, char player) {
     for (int row = 0; row < 8; ++row) {
         for (int col = 0; col < 8; ++col) {
@@ -185,6 +240,14 @@ bool Game::hasValidMoves(uint64_t white, uint64_t black, char player) {
     return false;
 }
 
+
+/**
+ * @brief Calculates the current score of the game.
+ *
+ * @param white The 64-bit integer representing the white pieces.
+ * @param black The 64-bit integer representing the black pieces.
+ * @return A pair of integers representing the scores of White and Black.
+ */
 std::pair<int, int> Game::getScore(uint64_t white, uint64_t black) {
     int whiteCount = __builtin_popcountll(white);
     int blackCount = __builtin_popcountll(black);

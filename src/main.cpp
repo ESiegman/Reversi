@@ -1,3 +1,8 @@
+/**
+ * @file main.cpp
+ * @brief Main file for the game
+ */
+
 #include "game.hpp"
 
 int main() {
