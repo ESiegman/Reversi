@@ -11,24 +11,29 @@ To build and run the Reversi game, follow these steps:
     git clone https://github.com/ESiegman/Reversi.git
     cd Reversi
     ```
-
-2. Create a build directory:
+    
+2. If you are using NixOS, enter the development environment:
+    ```sh
+    nix develop
+    ```
+    
+3. Create a build directory:
     ```sh
     mkdir build
     cd build
     ```
 
-3. Generate build files using CMake:
+4. Generate build files using CMake:
     ```sh
     cmake ..
     ```
 
-4. Build the project:
+5. Build the project:
     ```sh
     cmake --build .
     ```
 
-5. Run the executable:
+6. Run the executable:
     ```sh
     ./Reversi
     ```
