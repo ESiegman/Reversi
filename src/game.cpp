@@ -23,7 +23,7 @@ void Game::run() {
     bool first = firstPlayer();
 
     std::string mode;
-    std::cout << "Enter '1' for Player vs Player, '2' for Player vs AI: ";
+    std::cout << "Enter '1' for Player vs Player, '2' for Player vs Computer: ";
     std::cin >> mode;
     bool choice = mode == "1";
      
@@ -51,7 +51,7 @@ void Game::run() {
             }
         }
     } else {
-        std::cout << "Player vs AI" << std::endl;
+        std::cout << "Player vs Computer" << std::endl;
         Opponent opponent;
         int alpha = std::numeric_limits<int>::min();
         int beta = std::numeric_limits<int>::max();
@@ -65,6 +65,7 @@ void Game::run() {
                 break;
             }
             std::pair<int, int> bestMove = opponent.minimax(*this, white, black, 'B', MAX_DEPTH, true, alpha, beta).second;
+            std::cout << "Computer's move: " << boardPositionToString(bestMove) << std::endl;
             applyMove(white, black, bestMove, 'B');
         }
     }
@@ -122,6 +123,7 @@ void Game::playerTurn(uint64_t &white, uint64_t &black, char player) {
 std::pair<int,int> Game::readMove(char player) {
     std::string position;
     std::cin >> position;
+    std::cout << std::endl;
 
     std::pair<int, int> boardPosition = stringToBoardPosition(position);
 

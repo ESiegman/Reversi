@@ -38,6 +38,18 @@ std::pair<int, int> stringToBoardPosition(const std::string& position) {
 }
 
 /**
+ * @brief Converts a pair of row and column indices into a chess board position string.
+ *
+ * @param position A pair of integers representing the row and column indices.
+ * @return A string representing the board position (e.g., "a1").
+ */
+std::string boardPositionToString(std::pair<int, int> position) {
+    char column = position.second + 'a';
+    char row = position.first + '1';
+    return std::string(1, column) + std::string(1, row);
+}
+
+/**
  * @brief Modifies a bit on an 8x8 board represented by a 64-bit integer.
  *
  * @param board Pointer to the 64-bit integer representing the board.
